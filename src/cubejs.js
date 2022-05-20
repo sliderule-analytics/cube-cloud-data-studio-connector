@@ -12,21 +12,24 @@ function checkForValidCreds(path, token) {
         Authorization: token,
       },
     });
+
     if (response.getResponseCode() == 200) {
       return true;
     } else {
+      log(response.getResponseCode());
       resetAuth();
       return false;
     }
   } catch (error) {
+    log(error);
     resetAuth();
     return false;
   }
 }
 
-function setCubejsCredentials(path, key, token) {
+function setCubejsCredentials(path, key, token, securityContext) {
   if (!token) {
-    token = generateAccessToken(key);
+    token = generateAccessToken(key, securityContext);
   }
   var validCreds = checkForValidCreds(path, token);
   if (!validCreds) {

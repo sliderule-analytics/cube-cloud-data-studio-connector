@@ -71,12 +71,12 @@ function createJwt(privateKey, expiresInHours, data) {
   return toSign + "." + signature;
 }
 
-function generateAccessToken(privateKey) {
+function generateAccessToken(privateKey, data) {
   // Your super secret private key
   const accessToken = createJwt(
     privateKey,
     6, // expires in 6 hours
-    {}
+    data || {}
   );
   return accessToken;
 }

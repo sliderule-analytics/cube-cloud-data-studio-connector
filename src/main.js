@@ -86,9 +86,26 @@ function getFields(request) {
 // https://developers.google.com/datastudio/connector/reference#getschema
 function getSchema(request) {
   log("getSchema");
-  var userProperties = PropertiesService.getUserProperties();
-  var securityContext = request;
-  log(JSON.stringify(data));
+
+  var securityContext;
+  if (request.configParams.securityContext) {
+    securityContext =
+      request.configParams.securityContext === "{}"
+        ? undefined
+        : JSON.parse(request.configParams.securityContext);
+  }
+  if (securityContext) {
+    var userProperties = PropertiesService.getUserProperties();
+    var path = userProperties.getProperty("dscc.path");
+    var key = userProperties.getProperty("dscc.key");
+    var validCreds = setCubejsCredentials(path, key, null, securityContext);
+    if (!validCreds) {
+      return {
+        errorCode: "INVALID_CREDENTIALS",
+      };
+    }
+    log("securityContext updated");
+  }
   return { schema: getFields(request).build() };
 }
 
