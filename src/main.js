@@ -19,18 +19,20 @@ function getConfig(request) {
     .newTextInput()
     .setId("securityContext")
     .setName("Security Context")
-    .setHelpText("Enter your Cubejs security context")
+    .setHelpText("Enter your Cubejs security context. Use doubles quotes.")
     .setPlaceholder("{}");
 
-  // config
-  //   .newTextInput()
-  //   .setId("token")
-  //   .setName("Cubejs Token")
-  //   .setHelpText("Enter your Cubejs token")
-  //   .setPlaceholder("123....");
+  // TODO: pull availables cubes and turn them into a list
+  config
+    .newTextInput()
+    .setId("useCubes")
+    .setName("Use Cubejs")
+    .setHelpText(
+      "Enter the array of cubes you'd like to include in the connector. Leave blank to use all Cubes. Use doubles quotes."
+    )
+    .setPlaceholder("['Orders','Customers']");
 
   config.setDateRangeRequired(true);
-  log("getConfig");
   return config.build();
 }
 
@@ -47,17 +49,24 @@ function cubejsNumberType(format) {
 }
 
 function getFields(request) {
-  log("getFields");
-  var userProperties = PropertiesService.getUserProperties();
-  var url = userProperties.getProperty("dscc.path");
-  var token = userProperties.getProperty("dscc.token");
   var fields = cc.getFields();
   var types = cc.FieldType;
   var aggregations = cc.AggregationType;
-  var jsonResponse = cubejectApiReqest(url, token, "/meta");
-  var useCubes = ["Orders", "Customers"];
+
+  var userProperties = PropertiesService.getUserProperties();
+  var baseUrl = userProperties.getProperty("dscc.baseUrl");
+  var token = userProperties.getProperty("dscc.token");
+  var securityContext = getSecurityContext(request);
+  var jsonResponse = cubejectApiReqest(
+    baseUrl,
+    token,
+    "/meta",
+    null,
+    securityContext
+  );
+  var useCubes = getUseCubes(request);
   jsonResponse.cubes.forEach(function(cube) {
-    if (useCubes.indexOf(cube.name) >= 0) {
+    if (useCubes.indexOf(cube.name) >= 0 || useCubes === "All") {
       cube.dimensions.forEach(function(dimension) {
         var dataStudioType = cubejsTypesToDataStudioTypes(dimension);
         fields
@@ -85,26 +94,17 @@ function getFields(request) {
 
 // https://developers.google.com/datastudio/connector/reference#getschema
 function getSchema(request) {
-  log("getSchema");
-
-  var securityContext;
-  if (request.configParams.securityContext) {
-    securityContext =
-      request.configParams.securityContext === "{}"
-        ? undefined
-        : JSON.parse(request.configParams.securityContext);
-  }
+  var securityContext = getSecurityContext(request);
   if (securityContext) {
     var userProperties = PropertiesService.getUserProperties();
-    var path = userProperties.getProperty("dscc.path");
+    var baseUrl = userProperties.getProperty("dscc.baseUrl");
     var key = userProperties.getProperty("dscc.key");
-    var validCreds = setCubejsCredentials(path, key, null, securityContext);
+    var validCreds = setCubejsCredentials(baseUrl, key, null, securityContext);
     if (!validCreds) {
       return {
         errorCode: "INVALID_CREDENTIALS",
       };
     }
-    log("securityContext updated");
   }
   return { schema: getFields(request).build() };
 }
@@ -139,9 +139,16 @@ function getData(request) {
 
   var encParams = toHtmlQuery_(query);
   var userProperties = PropertiesService.getUserProperties();
-  var url = userProperties.getProperty("dscc.path");
+  var baseUrl = userProperties.getProperty("dscc.baseUrl");
   var token = userProperties.getProperty("dscc.token");
-  var jsonResponse = cubejectApiReqest(url, token, "/load", encParams);
+  var securityContext = getSecurityContext(request);
+  var jsonResponse = cubejectApiReqest(
+    baseUrl,
+    token,
+    "/load",
+    encParams,
+    securityContext
+  );
   var data = jsonResponse.data;
 
   var rows = [];

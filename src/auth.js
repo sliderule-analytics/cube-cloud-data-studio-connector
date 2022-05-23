@@ -20,7 +20,7 @@ function getAuthType() {
  */
 function resetAuth() {
   var user_keyProperties = PropertiesService.getUserProperties();
-  user_keyProperties.deleteProperty("dscc.path");
+  user_keyProperties.deleteProperty("dscc.baseUrl");
   user_keyProperties.deleteProperty("dscc.key");
   user_keyProperties.deleteProperty("dscc.token");
 }
@@ -31,10 +31,13 @@ function resetAuth() {
  */
 function isAuthValid() {
   var userProperties = PropertiesService.getUserProperties();
-  var path = userProperties.getProperty("dscc.path");
-  var key = userProperties.getProperty("dscc.key");
+  var baseUrl = userProperties.getProperty("dscc.baseUrl");
   var token = userProperties.getProperty("dscc.token");
-  return checkForValidCreds(path, token);
+  var response = checkForValidCreds(baseUrl, token);
+  if (response) {
+    return true;
+  }
+  return response;
 }
 
 /**
@@ -43,12 +46,10 @@ function isAuthValid() {
  * @return {object} An object with an errorCode.
  */
 function setCredentials(request) {
-  log("setCreds");
   var creds = request.pathKey;
-  var path = creds.path;
+  var baseUrl = creds.path;
   var key = creds.key;
-
-  var validCreds = setCubejsCredentials(path, key);
+  var validCreds = setCubejsCredentials(baseUrl, key);
   if (!validCreds) {
     return {
       errorCode: "INVALID_CREDENTIALS",
