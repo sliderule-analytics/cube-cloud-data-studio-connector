@@ -1,18 +1,18 @@
 {
   "dataStudio": {
-    "name": "Cubejs",
+    "name": "Cube Cloud",
     "company": "SlideRule Analytics",
     "companyUrl": "https://slideruleanalytics.com/",
     "logoUrl": "https://uploads-ssl.webflow.com/6023f5cab7cab85efab82769/6082dc3641d412097e0b6508_sra-logo-diagonal.jpeg",
-    "addonUrl": "https://www.slideruleanalytics.com/open-source/cubejs-data-studio-connector",
+    "addonUrl": "https://www.slideruleanalytics.com/open-source/cube-cloud-data-studio-connector",
     "supportUrl": "https://www.slideruleanalytics.com/contact",
-    "shortDescription": "View and explore your Cubejs data in Data Studio.",
-    "description": "Add your Cubejs data to Data Studio with a few clicks. See your dimensions and metrics in Data Studio exactly as you do in Cubejs.",
+    "shortDescription": "View and explore your Cube Cloud data in Data Studio.",
+    "description": "Add your Cube Cloud data to Data Studio with a few clicks. See your dimensions and metrics in Data Studio exactly as you do in Cube Cloud.",
     "privacyPolicyUrl": "https://www.slideruleanalytics.com/utility-pages/privacy-policy",
     "termsOfServiceUrl": "https://www.slideruleanalytics.com/utility-pages/terms-conditions",
     "authType": ["PATH_KEY"],
     "feeType": ["FREE"],
-    "sources": ["CUBEJS"]
+    "sources": ["CUBE_CLOUD"]
   },
   "dependencies": {
     "libraries": []
