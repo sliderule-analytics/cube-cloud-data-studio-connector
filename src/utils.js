@@ -1,3 +1,9 @@
+function formatTimestamp(timestampString) {
+  /* formats an ISO string as YYYYMMDD */
+  var dateString = timestampString.slice(0, 10).replace(/-/g, "");
+  return dateString.toString();
+}
+
 /**
  * Generate HTML query string from given object
  * Adapted from http://stackoverflow.com/a/18116302/1677912

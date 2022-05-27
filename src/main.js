@@ -76,7 +76,7 @@ function getFields(request) {
         fields
           .newDimension()
           .setId(dimension.name)
-          .setName(dimension.shortTitle)
+          .setName(dimension.title)
           .setType(types[dataStudioType])
           .setDescription(dimension.description);
       });
@@ -85,7 +85,7 @@ function getFields(request) {
         fields
           .newMetric()
           .setId(dimension.name)
-          .setName(dimension.shortTitle)
+          .setName(dimension.title)
           .setType(types[dataStudioType])
           .setDescription(dimension.description)
           .setAggregation(aggregations.AUTO);
@@ -157,11 +157,18 @@ function getData(request) {
   var data = jsonResponse.data;
 
   var rows = [];
+  var cubeDimensions = jsonResponse.annotation.dimensions;
   for (var i = 0; i < data.length; i++) {
     var row = [];
     var cubejsRow = data[i];
     requestedFields.asArray().forEach(function(field) {
       var value = cubejsRow[field.getId()];
+      if (
+        field.isDimension() &&
+        cubeDimensions[field.getId()].type === "time"
+      ) {
+        value = formatTimestamp(value);
+      }
       row.push(value);
     });
     rows.push({ values: row });
