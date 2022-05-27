@@ -8,15 +8,9 @@ function isAdminUser() {
 // https://developers.google.com/datastudio/connector/reference#getconfig
 function getConfig(request) {
   var config = cc.getConfig();
-  config
-    .newInfo()
-    .setId("generalInfo")
-    .setText(
-      "This is the template connector created by https://github.com/googledatastudio/dscc-gen"
-    );
 
   config
-    .newTextInput()
+    .newTextArea()
     .setId("securityContext")
     .setName("Security Context")
     .setHelpText("Enter your Cubejs security context. Use doubles quotes.")
@@ -24,13 +18,23 @@ function getConfig(request) {
 
   // TODO: pull availables cubes and turn them into a list
   config
-    .newTextInput()
+    .newTextArea()
     .setId("useCubes")
-    .setName("Use Cubejs")
+    .setName("Use Cubes")
     .setHelpText(
       "Enter the array of cubes you'd like to include in the connector. Leave blank to use all Cubes. Use doubles quotes."
     )
-    .setPlaceholder("['Orders','Customers']");
+    .setPlaceholder('["Orders","Customers"]');
+
+  config
+    .newTextInput()
+    .setId("timeDimension")
+    .setName("Time Dimension")
+    .setHelpText(
+      "Enter the dimension you'd like to use as the default time dimension. You can change this per chart in the report editor."
+    )
+    .setPlaceholder("Orders.createdAt")
+    .setAllowOverride(true);
 
   config.setDateRangeRequired(true);
   return config.build();
@@ -118,12 +122,13 @@ function getData(request) {
   );
 
   var dateRange = request.dateRange;
+  var timeDimension = getTimeDimension(request);
   var query = {
     dimensions: [],
     measures: [],
     timeDimensions: [
       {
-        dimension: "Orders.createdAt",
+        dimension: timeDimension,
         dateRange: [dateRange.startDate, dateRange.endDate],
       },
     ],

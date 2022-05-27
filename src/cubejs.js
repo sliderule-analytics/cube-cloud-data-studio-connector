@@ -6,7 +6,6 @@ function createCubejsUrl(baseUrl, endpoint, parameters) {
     url = baseUrl + endpoint + parameters;
   } else {
     url = baseUrl + endpoint;
-    Production;
   }
   return url;
 }
@@ -51,6 +50,16 @@ function getUseCubes(request) {
         : JSON.parse(request.configParams.useCubes);
   }
   return useCubes;
+}
+
+function getTimeDimension(request) {
+  var timeDimension;
+  if (request.configParams.timeDimension) {
+    timeDimension = request.configParams.timeDimension;
+  } else {
+    throw new Error("You must select a time dimension.");
+  }
+  return timeDimension;
 }
 
 function getSecurityContext(request) {
