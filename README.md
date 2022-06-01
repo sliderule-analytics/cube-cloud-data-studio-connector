@@ -1,6 +1,6 @@
-# Cubejs-Datastudio
+# Cube-Cloud-Connector
 
-This is a generic cubejs to data studio connector
+This is a generic cube cloud to data studio connector
 
 You must use a Chrome browser logged in as dev@slideruleanalytics.com to test
 the connector.
