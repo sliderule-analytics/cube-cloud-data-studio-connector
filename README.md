@@ -9,6 +9,9 @@ You must also be logged into clasp as dev@slideruleanalytics.com
 
 ## Testing
 
+The dscc gen library only works with node version 14.19 or earlier. Use nvm to
+install and switch node versions.
+
 Note that `npm run try_latest` doesn't work at first because it uses the wrong
 deployment id. Get the correct deploy id from
 [here](https://script.google.com/home/projects/1xEDsQ9o0cLXwXIgfAulqmFktZoioqJX3duxO_CcWEkoNMeVNBIOtswyk/deployments/AKfycbwL55nncAn_tchr2b3OOsliPmNblexiEJvCMBz7Og4)
@@ -50,3 +53,9 @@ https://datastudio.google.com/u/0/datasources/create?connectorId=[DEPLOYMENT_ID]
 ```
 
 Make sure you use that link in the dev@slideruleanalytics.com Chrome browser.
+
+## Tips
+
+If you're using the connector with a cube endpoint that's in dev mode, wait for
+the API to finish deploying after making a change before updating the connector.
+Otherwise, you'll have to reauthenticate the connector.
