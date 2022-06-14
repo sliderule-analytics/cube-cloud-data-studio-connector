@@ -12,6 +12,10 @@ You must also be logged into clasp as dev@slideruleanalytics.com
 The dscc gen library only works with node version 14.19 or earlier. Use nvm to
 install and switch node versions.
 
+```bash
+nvm install 14.19.3
+```
+
 Note that `npm run try_latest` doesn't work at first because it uses the wrong
 deployment id. Get the correct deploy id from
 [here](https://script.google.com/home/projects/1xEDsQ9o0cLXwXIgfAulqmFktZoioqJX3duxO_CcWEkoNMeVNBIOtswyk/deployments/AKfycbwL55nncAn_tchr2b3OOsliPmNblexiEJvCMBz7Og4)
