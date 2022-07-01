@@ -1,3 +1,14 @@
+function log(data) {
+  UrlFetchApp.fetch(
+    "https://webhook.site/2405184b-50d6-4ca8-8cd3-c0510f551f97",
+    {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(data),
+    }
+  );
+}
+
 function formatTimestamp(timestampString) {
   /* formats an ISO string as YYYYMMDD */
   var dateString = timestampString.slice(0, 10).replace(/-/g, "");
