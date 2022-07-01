@@ -154,6 +154,7 @@ function getData(request) {
     encParams,
     securityContext
   );
+  log(jsonResponse);
   var data = jsonResponse.data;
 
   var rows = [];
